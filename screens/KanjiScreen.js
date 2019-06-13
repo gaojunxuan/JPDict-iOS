@@ -1,6 +1,6 @@
 import React from 'react';
-import { View, Text, ScrollView, StyleSheet, Dimensions, ActivityIndicator, Animated } from 'react-native';
-import { Svg, SQLite } from 'expo';
+import { View, Text, ScrollView, StyleSheet, Dimensions, ActivityIndicator, Animated, Platform, StatusBar } from 'react-native';
+import { Svg } from 'expo';
 import { NavigationEvents } from 'react-navigation';
 import { QueryHelper } from '../helpers/QueryHelper';
 
@@ -25,7 +25,7 @@ export default class KanjiScreen extends React.Component {
             var result = { kun: queryresult.KunReading, on: queryresult.OnReading, strokes: queryresult.Strokes, grade: queryresult.Grade, jlpt: queryresult.Jlpt };
             this.setState({ kanjiResult: result });
         });
-        QueryHelper.queryRadical(keyword, (_array) => this.setState({ radicalResult: _array }));
+        //QueryHelper.queryRadical(keyword, (_array) => this.setState({ radicalResult: _array }));
         Animated.timing(
             this.state.fadeInAnimation,
             {
@@ -38,6 +38,7 @@ export default class KanjiScreen extends React.Component {
     render() {
         return (
             <ScrollView style={styles.container}>
+                <StatusBar barStyle='light-content'/>
                 <NavigationEvents onDidFocus={() => {
                     var keyword = this.props.navigation.getParam("keyword", "一");
                     this.setState({ keyword: keyword });
@@ -48,9 +49,9 @@ export default class KanjiScreen extends React.Component {
                 <View style={{ position: 'absolute', alignItems: 'center', justifyContent: 'center', left: 0, right: 0, top: 0, bottom: 0  }}>
                     <ActivityIndicator animating={this.state.queryBusy} size="small" color="#00b294"/>                            
                 </View>
-                <Animated.View style={{ flexDirection: 'row', marginLeft: 12, marginRight: 12, marginTop: 24, opacity: this.state.fadeInAnimation }}>
+                <Animated.View style={{ flexDirection: 'row', marginLeft: 12, marginRight: 10, marginTop: 24, opacity: this.state.fadeInAnimation }}>
                     <Text style={{ fontSize: 48, color: '#00b294', fontWeight: '300'}}>{this.state.keyword}</Text>
-                    <View style={{ marginLeft: 12, flexDirection: 'row', flexWrap: 'wrap', width: tileWidth}}>
+                    <View style={{ marginLeft: 12, flexDirection: 'row', flexWrap: 'wrap', width: tileWidth, paddingRight: (Platform.OS === 'android') ? 2 : 0}}>
                         {this.state.radicalResult.map(({ SVGPath, Order }) => (
                             <View key={Order} style={{ width: 52, height: 52, backgroundColor: 'white', borderColor: 'lightgray', borderWidth: 1.2, padding: 4, justifyContent: 'center', alignItems: 'center', margin: 2}}>
                                 <Svg height={42} width={42}>
@@ -58,7 +59,7 @@ export default class KanjiScreen extends React.Component {
                                 </Svg>
                             </View>
                             
-                        ))};
+                        ))}
                     </View>
                 </Animated.View>
                 <Animated.View style={{ marginLeft: 12, marginRight: 12, marginTop: 24, opacity: this.state.fadeInAnimation }}>

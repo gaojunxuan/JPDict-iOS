@@ -1,15 +1,15 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, Platform } from 'react-native';
 import { createStackNavigator, createBottomTabNavigator } from 'react-navigation';
 import HomeScreen from './screens/HomeScreen';
 import ResultScreen from './screens/ResultScreen';
 import TranslateScreen from './screens/TranslateScreen';
 import { gray } from 'ansi-colors';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import SearchScreen from './screens/SearchScreen';
 import NotebookScreen from './screens/NotebookScreen';
 import KanjiScreen from './screens/KanjiScreen';
 import NewsReaderScreen from './screens/NewsReaderScreen';
+import TabBarIcon from './components/TabBarIcon';
 
 /*export default class App extends React.Component {
   render() {
@@ -27,12 +27,30 @@ const HomeStack = createStackNavigator(
     NewsReader: NewsReaderScreen
   }
 );
+HomeStack.navigationOptions = {
+  tabBarLabel: '主页',
+  tabBarIcon: ({ focused }) => (
+    <TabBarIcon
+      focused={focused}
+      name={Platform.OS === 'ios' ? 'ios-home' : 'md-home'}
+    />
+  ),
+};
 
 const TranslateStack = createStackNavigator(
   {
     Translate: TranslateScreen
   },
 );
+TranslateStack.navigationOptions = {
+  tabBarLabel: '翻译',
+  tabBarIcon: ({ focused }) => (
+    <TabBarIcon
+      focused={focused}
+      name={Platform.OS === 'ios' ? 'ios-globe' : 'md-globe'}
+    />
+  ),
+};
 
 const SearchStack = createStackNavigator(
   {
@@ -41,6 +59,15 @@ const SearchStack = createStackNavigator(
     Kanji: KanjiScreen
   }
 )
+SearchStack.navigationOptions = {
+  tabBarLabel: '查词',
+  tabBarIcon: ({ focused }) => (
+    <TabBarIcon
+      focused={focused}
+      name={Platform.OS === 'ios' ? 'ios-search' : 'md-search'}
+    />
+  ),
+};
 
 const NotebookStack = createStackNavigator(
   {
@@ -49,8 +76,17 @@ const NotebookStack = createStackNavigator(
     Kanji: KanjiScreen
   }
 )
+NotebookStack.navigationOptions = {
+  tabBarLabel: '生词本',
+  tabBarIcon: ({ focused }) => (
+    <TabBarIcon
+      focused={focused}
+      name={Platform.OS === 'ios' ? 'ios-bookmarks' : 'md-bookmarks'}
+    />
+  ),
+};
 
-export default createBottomTabNavigator(
+const AppNavigator = createBottomTabNavigator(
   {
     Home: {
       screen: HomeStack,
@@ -84,27 +120,20 @@ export default createBottomTabNavigator(
         backgroundColor: '#fafbfc'
       }
     },
-    navigationOptions: ({ navigation }) => ({
-      tabBarIcon: ({ focused, horizontal, tintColor }) => {
-        const { routeName } = navigation.state;
-        let iconName;
-        if (routeName === 'Home') {
-          iconName = `ios-home${focused ? '' : '-outline'}`;
-        } else if (routeName === 'Translate') {
-          iconName = `ios-globe${focused ? '' : '-outline'}`;
-        } else if (routeName === 'Search') {
-          iconName = `ios-search${focused ? '' : '-outline'}`;
-        } else if (routeName === 'Notebook') {
-          iconName = `ios-bookmarks${focused ? '' : '-outline'}`;
-        }
-
-        // You can return any component that you like here! We usually use an
-        // icon component from react-native-vector-icons
-        return <Ionicons name={iconName} size={horizontal ? 20 : 25} color={tintColor} />;
-      },
-    }),
+    
   }
 );
+export default createBottomTabNavigator({
+  HomeStack,
+  SearchStack,
+  NotebookStack,
+  TranslateStack
+}, 
+{
+  tabBarOptions: {
+    activeTintColor: '#00b294',
+  },
+});
 
 const styles = StyleSheet.create({
   container: {

@@ -1,16 +1,15 @@
 import React from 'react';
-import { View, Button, Text, StyleSheet, ScrollView, TouchableOpacity, Dimensions, Animated, ActivityIndicator } from 'react-native';
+import { View, Button, Text, StyleSheet, ScrollView, TouchableOpacity, Dimensions, Animated, ActivityIndicator, Platform, StatusBar } from 'react-native';
 import Swiper from 'react-native-swiper';
 import { NavigationEvents } from 'react-navigation';
-import Expo, { SQLite, Speech } from 'expo';
+import Expo, { Speech, Icon } from 'expo';
 import HideableView from '../components/HideableView';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import { VerbConjugationHelper } from '../helpers/VerbConjugationHelper'
 import TouchableBounce from 'react-native/Libraries/Components/Touchable/TouchableBounce';
 import { NotebookHelper } from '../helpers/NotebookHelper';
 import { QueryHelper } from '../helpers/QueryHelper';
 
-const tileWidth = Dimensions.get("window").width - 24;
+const tileWidth = Dimensions.get("window").width - ((Platform.OS === 'android') ? 40 : 24);
 var { windowWidth, windowHeight } = Dimensions.get('window');
 var self;
 export default class ResultScreen extends React.Component {
@@ -23,7 +22,7 @@ export default class ResultScreen extends React.Component {
             },
             headerRight: (
                 <TouchableOpacity onPress={ params.isInNotebook ? () => self.removeFromNotebook() : () => self.addToNotebook() }>
-                    <Ionicons name={ params.isInNotebook ? "ios-bookmark" : "ios-bookmark-outline" } style={{ color: 'white', marginRight: 12 }} size={24}/>
+                    <Icon.Ionicons name={ params.isInNotebook ? `${Platform.OS === 'ios' ? 'ios' : 'md'}-trash` : `${Platform.OS === 'ios' ? 'ios' : 'md'}-bookmark` } style={{ color: 'white', marginRight: 12 }} size={24}/>
                 </TouchableOpacity>
             ),
             headerTintColor: 'white',
@@ -59,7 +58,8 @@ export default class ResultScreen extends React.Component {
     render() {
         var id = this.props.navigation.getParam("itemId", "0");
         return (
-            <View style={styles.container}> `
+            <View style={styles.container}>
+                <StatusBar barStyle='light-content'/>
                 <NavigationEvents onDidFocus={() => {
                     QueryHelper.query(id, (_array)=>{
                         this.setState({ result: _array, keyword: _array[0].Keyword }); 
@@ -133,12 +133,12 @@ export default class ResultScreen extends React.Component {
                             <ActivityIndicator animating={this.state.queryBusy} size="small" color="#00b294"/>                            
                         </View>
                         <Animated.View style={{paddingTop: 24, paddingLeft: 12, paddingRight: 12, paddingBottom: 24, opacity: this.state.fadeInAnim}}>
-                            <View style={{ flexDirection: 'row' }}>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                 <Text style={{fontSize: 24, color: '#00b294', marginRight: 8}}>{this.state.keyword}</Text>
                                 <TouchableOpacity  onPress={() => {
-                                    Expo.Speech.speak(Object(this.state.result[0]).Reading, { language: "ja", rate: 0.5 })
+                                    Speech.speak(Object(this.state.result[0]).Reading, { language: "ja", rate: 0.5 })
                                 }}>
-                                    <Ionicons style={{ marginTop: -4 }} name='ios-volume-up' color='#00b294' size={32}/>
+                                    <Icon.Ionicons name={`${Platform.OS === 'ios' ? 'ios' : 'md'}-volume-high`} color='#00b294' size={32}/>
                                 </TouchableOpacity>
                             </View>
                             <View style={{marginTop: 24}}>
@@ -190,7 +190,9 @@ export default class ResultScreen extends React.Component {
                                                     width: tileWidth,
                                                     height: 100,
                                                     backgroundColor: 'white',
-                                                    
+                                                    borderColor: '#E9E9E9',
+                                                    borderWidth: (Platform.OS === 'android') ? 1.2 : 0,
+                                                    margin: (Platform.OS === 'android') ? 2 : 0
                                                 }
                                             }>
                                                 <Text style={{fontSize: 24, marginLeft: 12, flexWrap: 'wrap', lineHeight: 28, color: '#00b294'}}>{k}</Text>
@@ -200,7 +202,7 @@ export default class ResultScreen extends React.Component {
                                                 </View>
                                             </View>
                                         </TouchableBounce>
-                                    ))};
+                                    ))}
                                 </View>
                                 
                             </HideableView>

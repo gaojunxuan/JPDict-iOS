@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Button, Text, StyleSheet, ScrollView, TouchableOpacity, Dimensions, Animated, ActivityIndicator } from 'react-native';
+import { View, Button, Text, StyleSheet, ScrollView, TouchableOpacity, Dimensions, Animated, ActivityIndicator, Platform, StatusBar } from 'react-native';
 import TouchableBounce from 'react-native/Libraries/Components/Touchable/TouchableBounce';
 import Expo, { SQLite } from 'expo';
 import { NavigationEvents } from 'react-navigation';
@@ -23,6 +23,7 @@ export default class NotebookScreen extends React.Component {
         
         return (            
             <View style={styles.container}>
+                <StatusBar barStyle='light-content'/>
                 <NavigationEvents onDidFocus={() => {
                     if(this.db != null) {
                         this.db.transaction(tx => {
@@ -60,7 +61,9 @@ export default class NotebookScreen extends React.Component {
                                         width: tileWidth,
                                         height: 112,
                                         backgroundColor: 'white',
-                                        
+                                        borderColor: '#E9E9E9',
+                                        borderWidth: (Platform.OS === 'android') ? 1.2 : 0,
+                                        margin: (Platform.OS === 'android') ? 2 : 0
                                     }
                                 }>
                                     <Text style={{fontSize: 24, marginLeft: 12, flexWrap: 'wrap', lineHeight: 28, color: '#00b294'}}>{Keyword}</Text>

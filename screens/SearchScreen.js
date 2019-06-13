@@ -1,8 +1,7 @@
 import React from 'react';
-import { View, Text, TextInput, StyleSheet, ScrollView, FlatList, TouchableHighlight, Alert } from 'react-native';
+import { View, Text, TextInput, StyleSheet, ScrollView, FlatList, TouchableHighlight, Alert, Platform, StatusBar } from 'react-native';
 import { NavigationEvents } from 'react-navigation';
 import { DictSchema } from '../models/dict'
-import Expo, { SQLite } from 'expo';
 import { SearchBar, Divider } from 'react-native-elements'
 import { QueryHelper } from '../helpers/QueryHelper';
 
@@ -23,13 +22,14 @@ export default class SearchScreen extends React.Component {
     render() {
         return (
             <View style={styles.container}>
+                <StatusBar barStyle='light-content'/>
                 <NavigationEvents onDidFocus={() => {
                     if(this.searchBar != null) {
                         this.searchBar.focus();
                     }
                 }}>
                 </NavigationEvents>
-                <SearchBar lightTheme ref={(input) => this.searchBar = input} clearButtonMode='while-editing' icon={{ name: 'search', style: { marginTop: 2 } }} returnKeyType='search' placeholder='键入或粘贴' selectionColor='#00b294' searchIcon={{size: 36}} inputStyle={styles.searchBarInput} containerStyle={styles.searchBarContainer} onChangeText={(text)=>{
+                <SearchBar lightTheme ref={(input) => this.searchBar = input} clearButtonMode='while-editing' icon={{ name: 'search', style: { marginTop: (Platform.OS === "ios") ? 4 : 0, alignSelf: 'flex-start' } }} returnKeyType='search' placeholder='键入或粘贴' selectionColor='#00b294' searchIcon={{size: 36}} inputStyle={styles.searchBarInput} containerStyle={styles.searchBarContainer} onChangeText={(text)=>{
                     this.setState({ keyword: text });
                     text = text.replace(" ", "").replace(" ", "");
                     if (/\S/.test(text)) {

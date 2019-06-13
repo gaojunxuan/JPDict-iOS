@@ -5,13 +5,9 @@ import { View } from 'react-native';
 const HideableView = (props) => {
   const { children, hide, style } = props;
   if (hide) {
-    return null;
+    return (<View></View>);
   }
-  return (
-    <View {...this.props} style={style}>
-      { children }
-    </View>
-  );
+  return (<View {...this.props} style={style}>{children}</View>);
 };
 
 HideableView.propTypes = {
@@ -25,7 +21,6 @@ HideableView.propTypes = {
       PropTypes.element,
     ])),
   ]).isRequired,
-  style: View.propTypes.style,
   hide: PropTypes.bool,
 };
 
