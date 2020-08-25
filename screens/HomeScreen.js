@@ -28,6 +28,8 @@ import { HttpRequestHelper } from "../helpers/HttpRequestHelper";
 import { QueryHelper } from "../helpers/QueryHelper";
 import HideableView from "../components/HideableView";
 import { DailySentenceSwiper } from "../components/DailySentenceSwiper";
+import { NHKNewsScrollView } from "../components/NHKNewsScrollView";
+import { RadioSelector } from "../components/RadioSelector";
 //import Kuromoji from 'kuromoji'
 
 const horizontalMargin = 20;
@@ -37,8 +39,6 @@ const windowWidth = Dimensions.get("window").width;
 const itemWidth = slideWidth + horizontalMargin * 2;
 const itemHeight = 200;
 const contentOffset = (sliderWidth - itemWidth) / 2;
-const audioPlayer = new Audio.Sound();
-const radioPlayer = new Audio.Sound();
 
 const gutter = 12;
 const swiperWidth = windowWidth - gutter * 4;
@@ -64,7 +64,6 @@ export default class HomeScreen extends React.Component {
       radioPaused: true,
       radioLoaded: false,
     };
-    console.log(FileSystem.documentDirectory);
   }
 
   async componentDidMount() {
@@ -74,19 +73,8 @@ export default class HomeScreen extends React.Component {
     this.setState({ easyNews: easyNews });
     let radioNews = await HttpRequestHelper.getNHKRadioNews();
     this.setState({ radioNews: radioNews });
-    radioPlayer.setOnPlaybackStatusUpdate((status) => {
-      this.setState({
-        radioPosition: status.positionMillis / status.playableDurationMillis,
-        radioPaused: !status.isPlaying,
-        radioLoaded: status.isLoaded,
-      });
-    });
   }
 
-  async onSlidingComplete(value) {
-    var status = await radioPlayer.getStatusAsync();
-    radioPlayer.setPositionAsync(value * status.durationMillis);
-  }
   render() {
     return (
       <ScrollView style={styles.container}>
@@ -147,65 +135,11 @@ export default class HomeScreen extends React.Component {
           >
             NHK 新闻
           </Text>
-          <ScrollView
-            horizontal={true}
-            style={{
-              paddingLeft: 24,
-              paddingRight: 24,
-              paddingTop: 8,
-              paddingBottom: 12,
-            }}
-          >
-            <View style={{ flexDirection: "row", paddingRight: 24 }}>
-              {this.state.easyNews.map((news) => (
-                <View key={news.newsId} style={{ flexDirection: "row" }}>
-                  <View style={styles.shadowContainer}>
-                    <Image
-                      style={{ width: 140, height: 80, borderRadius: 8 }}
-                      source={{ uri: news.imageUri }}
-                      defaultSource={require("../assets/imgnotfound.png")}
-                    ></Image>
-                  </View>
-                  <View
-                    style={{ marginLeft: 12, marginRight: 16, marginTop: 4 }}
-                  >
-                    <Text style={{ fontSize: 18 }}>{news.title}</Text>
-                    <TouchableOpacity
-                      style={{
-                        flexDirection: "row",
-                        marginTop: 8,
-                        alignItems: "center",
-                      }}
-                      onPress={() => {
-                        this.props.navigation.navigate("NewsReader", {
-                          newsId: news.newsId,
-                          img: news.imageUri,
-                          title: news.title,
-                        });
-                      }}
-                    >
-                      <Ionicons
-                        name="md-book"
-                        color="#00b294"
-                        size={18}
-                      ></Ionicons>
-                      <Text
-                        style={{
-                          color: "#00b294",
-                          fontSize: 16,
-                          marginLeft: 8,
-                        }}
-                      >
-                        阅读
-                      </Text>
-                    </TouchableOpacity>
-                  </View>
-                </View>
-              ))}
-            </View>
-          </ScrollView>
         </View>
-
+        <NHKNewsScrollView
+          data={this.state.easyNews}
+          navigation={this.props.navigation}
+        />
         <View style={styles.ineerContainer}>
           <Text
             style={{
@@ -218,101 +152,7 @@ export default class HomeScreen extends React.Component {
           >
             NHK Radio News
           </Text>
-          <HideableView hide={!this.state.radioLoaded}>
-            <View
-              style={{
-                flexDirection: "row",
-                marginLeft: 26,
-                marginRight: 24,
-                alignItems: "center",
-              }}
-            >
-              <TouchableOpacity
-                style={{ flex: 0.05 }}
-                onPress={async () => {
-                  var status = await radioPlayer.getStatusAsync();
-                  if (status.isLoaded) {
-                    if (status.isPlaying) {
-                      await radioPlayer.pauseAsync();
-                    } else {
-                      await radioPlayer.playAsync();
-                    }
-                  }
-                }}
-              >
-                <Ionicons
-                  size={32}
-                  color="#00b294"
-                  name={this.state.radioPaused ? "ios-play" : "ios-pause"}
-                ></Ionicons>
-              </TouchableOpacity>
-              <Slider
-                style={{ flex: 0.95, marginLeft: 12 }}
-                minimumTrackTintColor="#00b294"
-                value={this.state.radioPosition}
-                onSlidingComplete={this.onSlidingComplete}
-              ></Slider>
-            </View>
-          </HideableView>
-          <ScrollView
-            horizontal={true}
-            style={{
-              paddingLeft: 24,
-              paddingRight: 24,
-              paddingTop: 8,
-              paddingBottom: 64,
-            }}
-          >
-            <View style={{ flexDirection: "row", paddingRight: 24 }}>
-              {this.state.radioNews.map((news) => (
-                <TouchableBounce
-                  key={news.title}
-                  style={{ marginRight: 8 }}
-                  onPress={async () => {
-                    try {
-                      await radioPlayer.unloadAsync();
-                      await radioPlayer.loadAsync({
-                        uri: Object(news).soundurl,
-                      });
-                      await radioPlayer.playAsync();
-                      this.setState({ radioPaused: false });
-                    } catch (error) {
-                      console.warn(error);
-                    }
-                  }}
-                >
-                  <View
-                    style={{
-                      borderRadius: 8,
-                      backgroundColor: "#00b294",
-                      padding: 12,
-                      flexDirection: "row",
-                    }}
-                  >
-                    <Ionicons
-                      name="ios-volume-high"
-                      color="white"
-                      size={32}
-                      style={{ marginTop: 8 }}
-                    />
-                    <View style={{ justifyContent: "center", marginLeft: 12 }}>
-                      <Text style={{ color: "white", fontSize: 18 }}>
-                        {news.title}
-                      </Text>
-                      <Text
-                        style={{
-                          color: "rgba(255, 255, 255, 0.5)",
-                          fontSize: 12,
-                        }}
-                      >
-                        {news.startdate}
-                      </Text>
-                    </View>
-                  </View>
-                </TouchableBounce>
-              ))}
-            </View>
-          </ScrollView>
+          <RadioSelector data={this.state.radioNews} />
         </View>
       </ScrollView>
     );

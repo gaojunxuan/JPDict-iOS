@@ -4,24 +4,19 @@
     "description": "Skylark JPDict",
     "slug": "JPDictRn",
     "privacy": "public",
-    "platforms": [
-      "ios",
-      "android"
-    ],
+    "platforms": ["ios", "android"],
     "version": "1.2.1",
     "orientation": "portrait",
-    "icon": "./assets/JPDict.png",
+    "icon": "./assets/JPDict-new.png",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/splash-new.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.skylarkworkshop.jpdict",
@@ -34,11 +29,9 @@
       "permissions": [],
       "versionCode": 1
     },
-    "packagerOpts": {
-      "assetExts": [
-        "db",
-        "txt"
-      ]
+
+    "extra": {
+      "JPDICT_API_KEY": "[API KEY]"
     }
   }
 }

@@ -7,7 +7,7 @@ export default class NewsReaderScreen extends React.Component {
     super(props);
     this.state = { uri: "" };
   }
-  componentWillMount() {
+  componentDidMount() {
     var newsId = this.props.navigation.getParam("newsId", "0");
     var img = this.props.navigation.getParam("img", "0");
     this.setState({

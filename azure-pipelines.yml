@@ -1,23 +1,22 @@
 # Expo Build
 
 trigger:
-- master
+  - master
 
 pool:
-  vmImage: 'ubuntu-latest'
+  vmImage: "ubuntu-latest"
 
 steps:
-- task: NodeTool@0
-  inputs: 
-   versionSpec: '10.x'
-   
-  displayName: 'Install Node.js'
+  - task: NodeTool@0
+    inputs:
+      versionSpec: "10.x"
 
-- script: |
-   npm install
-   
-   npm install -g expo-cli
-   npx expo login -u $(EXPO_CLI_USER) -p $(EXPO_CLI_PASSWORD) 
-   npx expo publish --non-interactive
-   
-  displayName: 'npm install and Expo publish'
+    displayName: "Install Node.js"
+
+  - script: |
+      npm install
+
+      npm install -g expo-cli
+      npx expo login -u $(EXPO_CLI_USER) -p $(EXPO_CLI_PASSWORD)
+
+    displayName: "npm install and Expo publish"
