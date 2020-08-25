@@ -3,6 +3,9 @@ import axios from 'axios';
 
 const appid = "20160211000011632";
 const key = "NvduVsfjpNEclI03Sbei";
+
+const JPDICT_API_KEY = "apikey";
+
 export class HttpRequestHelper {
     static jpToCn(text, callback) {
         var random = (Math.abs(Math.random() * 10000000000)) | 0;
@@ -28,33 +31,32 @@ export class HttpRequestHelper {
                             .then((response) => { callback(response.data) } )
                             .catch((error) => errorCallback(error)); 
     }
-    static getEasyNews(callback, errorCallback=(e) => console.log(e)) {
-        var request =  axios.get("https://slwspfunc.azurewebsites.net/api/GetNHKEasyNews?code=85lAgvwtrq9DfbDWpH6krQtNL8UkRtTsIjFuE7uyXVGfZLCrFt6VTw==")
-                            .then((response) => callback(response.data))
-                            .catch((error) => errorCallback(error)); 
+    static async getEasyNews() {
+      try {
+        let request =  await axios.get(`https://jpdictapi.terra-incognita.dev/api/GetNHKEasyNews?code=${JPDICT_API_KEY}`);
+        return request.data;
+      }
+      catch(e) {
+        console.log(e);
+      }
     }
-    static getDailySentences(callback, errorCallback=(e) => console.log(e)) {
-        for (var i = 0; i < 3; i++) {
-            var list = [];
-            var request =  axios.get("https://api.skylark-workshop.xyz/api/GetDailySentence?code=fi6c4bz3w5LkUnl8hGT0V4n/PoKBq7KH3Ly8za8HC4b/r8QRfj/zzw==&index=" + i.toString())
-                                .then((response) => { list.push(response.data); callback(list); } )
-                                .catch((error) => errorCallback(error)); 
-        }
-        
+    static async getDailySentences() {
+      try {
+        let request =  await axios.get(`https://jpdictapi.terra-incognita.dev/api/GetDailySentence?code=${JPDICT_API_KEY}`);
+        return request.data;
+      }
+      catch {
+        return [{ sentence: "网络异常" }, { sentence: "网络异常" }, { sentence: "网络异常" }]
+      }
+      
     }
-    static getNHKRadioNews(callback, errorCallback=(e) => console.log(e)) {
-        var request =  axios.get("http://api.skylark-workshop.xyz/api/GetNHKRadio?code=NjIR9q6QzPOo29fPMCIZhuyie35aFxAgikYYwV5oFw5QzMVaUtSo6A==&getItemsCount=true")
-                            .then((response) => {
-                                var list = [];
-                                for(var i = 0; i < response.data; i++) {
-                                    var itemRequest =  axios.get(`http://api.skylark-workshop.xyz/api/GetNHKRadio?code=NjIR9q6QzPOo29fPMCIZhuyie35aFxAgikYYwV5oFw5QzMVaUtSo6A==&speed=normal&index=${i}`)
-                                                            .then((itemResponse) => { 
-                                                                list.push(itemResponse.data);
-                                                                callback(list);
-                                                             })
-                                                            .catch((itemError) => console.error(itemError)); 
-                                }
-                            })
-                            .catch((error) => errorCallback(error)); 
+    static async getNHKRadioNews() {
+      try {
+        let request = await axios.get(`https://jpdictapi.terra-incognita.dev/api/GetNHKRadio?code=${JPDICT_API_KEY}&speed=normal`);
+        return request.data;
+      }
+      catch(e) {
+        console.log(e);
+      }
     }
 }

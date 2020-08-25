@@ -1,7 +1,8 @@
 import React from 'react';
 import { View, Button, Text, StyleSheet, ScrollView, TouchableOpacity, Dimensions, Animated, ActivityIndicator, Platform, StatusBar } from 'react-native';
 import TouchableBounce from 'react-native/Libraries/Components/Touchable/TouchableBounce';
-import Expo, { SQLite } from 'expo';
+import Expo from 'expo';
+import * as SQLite from 'expo-sqlite';
 import { NavigationEvents } from 'react-navigation';
 
 const tileWidth = Dimensions.get("window").width - 26;
@@ -42,7 +43,7 @@ export default class NotebookScreen extends React.Component {
                     <View style={{ paddingLeft: 12 }}>
                         {this.state.result.map(({ItemId, Definition, Pos, Keyword, Reading, Kanji}) => (
                             <TouchableBounce key={ItemId} onPress={() => {
-                                this.props.navigation.push('Result', { itemId: ItemId });
+                                this.props.navigation.push('Result', { itemId: ItemId, keyword: Reading });
                             }}>
                                 <View style={
                                     {

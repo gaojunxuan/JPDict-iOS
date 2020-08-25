@@ -1,4 +1,5 @@
-import Expo, { SQLite } from 'expo';
+import Expo from 'expo';
+import * as SQLite from 'expo-sqlite';
 
 export class NotebookHelper {
     static db = SQLite.openDatabase('note.db');

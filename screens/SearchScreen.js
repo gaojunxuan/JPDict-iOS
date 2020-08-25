@@ -45,8 +45,8 @@ export default class SearchScreen extends React.Component {
                 <ScrollView keyboardDismissMode='on-drag' keyboardShouldPersistTaps='handled'>
                     {this.state.items.map(({ ItemId, DefinitionId, Definition, Reading, Kanji }) => (
                         <TouchableHighlight key={DefinitionId} style={{ backgroundColor: 'white' }} underlayColor='#d9d9d9' onPress={()=>{
-                                this.props.navigation.push('Result', { itemId: ItemId })
-                            }}>
+                          this.props.navigation.push('Result', { itemId: ItemId, keyword: Reading })
+                        }}>
                             <View>
                                 <Text style={{margin: 8, marginLeft: 12, fontSize: 16, fontWeight: 'bold'}}>{Reading}</Text>
                                 <Text style={{marginLeft: 12, marginRight: 8, fontSize: 12, marginBottom: 4}}>{Definition.slice(0, 20)+"..."}</Text>

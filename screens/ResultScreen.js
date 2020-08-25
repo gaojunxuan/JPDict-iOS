@@ -2,7 +2,9 @@ import React from 'react';
 import { View, Button, Text, StyleSheet, ScrollView, TouchableOpacity, Dimensions, Animated, ActivityIndicator, Platform, StatusBar } from 'react-native';
 import Swiper from 'react-native-swiper';
 import { NavigationEvents } from 'react-navigation';
-import Expo, { Speech, Icon } from 'expo';
+import Expo from 'expo';
+import * as Speech from 'expo-speech';
+import { Ionicons } from '@expo/vector-icons';
 import HideableView from '../components/HideableView';
 import { VerbConjugationHelper } from '../helpers/VerbConjugationHelper'
 import TouchableBounce from 'react-native/Libraries/Components/Touchable/TouchableBounce';
@@ -22,7 +24,7 @@ export default class ResultScreen extends React.Component {
             },
             headerRight: (
                 <TouchableOpacity onPress={ params.isInNotebook ? () => self.removeFromNotebook() : () => self.addToNotebook() }>
-                    <Icon.Ionicons name={ params.isInNotebook ? `${Platform.OS === 'ios' ? 'ios' : 'md'}-trash` : `${Platform.OS === 'ios' ? 'ios' : 'md'}-bookmark` } style={{ color: 'white', marginRight: 12 }} size={24}/>
+                    <Ionicons name={ params.isInNotebook ? `${Platform.OS === 'ios' ? 'ios' : 'md'}-trash` : `${Platform.OS === 'ios' ? 'ios' : 'md'}-bookmark` } style={{ color: 'white', marginRight: 12 }} size={24}/>
                 </TouchableOpacity>
             ),
             headerTintColor: 'white',
@@ -57,11 +59,12 @@ export default class ResultScreen extends React.Component {
 
     render() {
         var id = this.props.navigation.getParam("itemId", "0");
+        var keyword = this.props.navigation.getParam('keyword', "");
         return (
             <View style={styles.container}>
                 <StatusBar barStyle='light-content'/>
                 <NavigationEvents onDidFocus={() => {
-                    QueryHelper.query(id, (_array)=>{
+                    QueryHelper.query(id, keyword, (_array)=>{
                         this.setState({ result: _array, keyword: _array[0].Keyword }); 
                         if(_array[0].Kanji == "" || _array[0].Kanji == null)
                         {
@@ -138,7 +141,7 @@ export default class ResultScreen extends React.Component {
                                 <TouchableOpacity  onPress={() => {
                                     Speech.speak(Object(this.state.result[0]).Reading, { language: "ja", rate: 0.5 })
                                 }}>
-                                    <Icon.Ionicons name={`${Platform.OS === 'ios' ? 'ios' : 'md'}-volume-high`} color='#00b294' size={32}/>
+                                    <Ionicons name={`${Platform.OS === 'ios' ? 'ios' : 'md'}-volume-high`} color='#00b294' size={32}/>
                                 </TouchableOpacity>
                             </View>
                             <View style={{marginTop: 24}}>

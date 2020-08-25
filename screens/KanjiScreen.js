@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, ScrollView, StyleSheet, Dimensions, ActivityIndicator, Animated, Platform, StatusBar } from 'react-native';
-import { Svg } from 'expo';
+import * as Svg from 'react-native-svg';
 import { NavigationEvents } from 'react-navigation';
 import { QueryHelper } from '../helpers/QueryHelper';
 

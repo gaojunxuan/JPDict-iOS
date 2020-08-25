@@ -1,13 +1,16 @@
-import { SQLite, FileSystem, Asset } from 'expo';
+import * as SQLite from 'expo-sqlite';
+import * as FileSystem from 'expo-file-system';
+import { Audio } from 'expo-av';
 import { AsyncStorage } from 'react-native';
-
+import { Asset } from 'expo-asset';
 
 export class QueryHelper {
     static db = SQLite.openDatabase('dict.db');
+    static sqliteDirectory = `${FileSystem.documentDirectory}/SQLite`;
     static prepareDb = async() => {
         SQLite.openDatabase('dict.db');
         SQLite.openDatabase('kanji.db');
-        SQLite.openDatabase('kanjirad.db');
+        //SQLite.openDatabase('kanjirad.db');
         var noteDb = SQLite.openDatabase('note.db');
         noteDb.transaction(tx => {
             tx.executeSql(
@@ -86,15 +89,18 @@ export class QueryHelper {
               (a,b) => console.log(b));
         });
     }
-    static query(id, callback) {
-        this.db.transaction(tx => {
-            tx.executeSql(
-              `SELECT * FROM Dict WHERE ItemId = ${id};`,
-              [],
-              (_, { rows: { _array } }) => {
-                  callback(_array);
-              });
-        });
+    static query(id, keyword, callback) {
+      var queryStatement = `WHERE ItemId = ${id}`;
+      if(keyword != "")
+        queryStatement += ` AND Reading = '${keyword}'`
+      this.db.transaction(tx => {
+          tx.executeSql(
+            `SELECT * FROM Dict ${queryStatement};`,
+            [],
+            (_, { rows: { _array } }) => {
+                callback(_array);
+            });
+      });
     }
     static kanjiDb = SQLite.openDatabase('kanji.db');
     static queryKanji(keyword, callback) {
