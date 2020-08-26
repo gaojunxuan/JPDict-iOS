@@ -189,6 +189,7 @@ export default class ResultScreen extends React.Component {
       Animated.timing(this.state.fadeInAnim, {
         toValue: 1,
         duration: 300,
+        useNativeDriver: true,
       }).start(() =>
         NotebookHelper.isInNotebook(_array[0], () =>
           this.setState({ isInNotebook: true })
