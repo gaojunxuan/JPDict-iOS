@@ -15,9 +15,8 @@
     "@react-navigation/bottom-tabs": "^5.8.0",
     "@react-navigation/native": "^5.7.3",
     "@react-navigation/stack": "^5.9.0",
-    "axios": "^0.18.0",
+    "axios": "^0.20.0",
     "babel-plugin-transform-react-jsx-source": "^6.22.0",
-    "babel-preset-expo": "^8.0.0",
     "dotenv": "^8.2.0",
     "expo": "^36.0.0",
     "expo-asset": "~8.0.0",
@@ -39,7 +38,7 @@
     "react-native-snap-carousel": "^3.7.5",
     "react-native-sound": "^0.10.9",
     "react-native-svg": "9.13.3",
-    "react-native-swiper": "^1.5.13",
+    "react-native-swiper": "^1.6.0",
     "react-native-vector-icons": "^4.6.0",
     "react-native-view-overflow": "0.0.3",
     "react-native-webview": "^10.8.2",
@@ -47,14 +46,11 @@
     "utf8": "^3.0.0"
   },
   "devDependencies": {
-    "babel-eslint": "^10.0.1",
-    "babel-preset-expo": "^5.0.0",
-    "eslint": "^5.16.0",
-    "eslint-config-airbnb": "^17.1.0",
-    "eslint-plugin-import": "^2.17.3",
-    "eslint-plugin-jsx-a11y": "^6.2.1",
-    "eslint-plugin-react": "^7.13.0",
-    "eslint-plugin-react-native": "^3.7.0",
-    "jest-expo": "^36.0.0"
+    "@babel/core": "^7.8.6",
+    "babel-preset-expo": "~8.1.0",
+    "eslint": "^4.18.2",
+    "eslint-plugin-react": "^7.20.0",
+    "eslint-plugin-react-native": "^3.8.1",
+    "jest-expo": "~37.0.0"
   }
 }
