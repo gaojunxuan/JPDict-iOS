@@ -30,7 +30,7 @@ import HideableView from "../components/HideableView";
 import { DailySentenceSwiper } from "../components/DailySentenceSwiper";
 import { NHKNewsScrollView } from "../components/NHKNewsScrollView";
 import { RadioSelector } from "../components/RadioSelector";
-//import Kuromoji from 'kuromoji'
+import Colors from "../constants/Colors";
 
 const horizontalMargin = 20;
 const slideWidth = 280;
@@ -51,11 +51,20 @@ export default class HomeScreen extends React.Component {
     },
     headerTintColor: "white",
   };
+  setNavigationOptions() {
+    this.props.navigation.setOptions({
+      title: "主页",
+      headerStyle: {
+        backgroundColor: Colors.tintColor,
+      },
+      headerTintColor: "white",
+    });
+  }
 
   constructor(props) {
     super(props);
+    this.setNavigationOptions();
     QueryHelper.prepareDb();
-
     this.state = {
       dailySentence: [],
       easyNews: [],
