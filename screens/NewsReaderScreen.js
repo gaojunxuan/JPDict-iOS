@@ -1,6 +1,10 @@
 import React from "react";
-import { View, Text, WebView, StatusBar } from "react-native";
+import { View, Text, StatusBar } from "react-native";
 import { NavigationEvents } from "react-navigation";
+import { WebView } from "react-native-webview";
+import Constants from "expo-constants";
+
+const JPDICT_API_KEY = Constants.manifest.extra.JPDICT_API_KEY;
 
 export default class NewsReaderScreen extends React.Component {
   constructor(props) {
@@ -11,7 +15,7 @@ export default class NewsReaderScreen extends React.Component {
     var newsId = this.props.navigation.getParam("newsId", "0");
     var img = this.props.navigation.getParam("img", "0");
     this.setState({
-      uri: `https://slwspfunc.azurewebsites.net/api/GetMobileNewsWithRuby?code=jA68hxddggHVtOQ8K6AQs4uWHMwDTkLioRYBVMCL5bHdwQLpqkrs6w==&id=${newsId}&img=${img}`,
+      uri: `https://jpdictapi.terra-incognita.dev/api/GetFormattedEasyNews?code=${JPDICT_API_KEY}&id=${newsId}&img=${img}`,
     });
   }
   static navigationOptions = ({ navigation }) => ({

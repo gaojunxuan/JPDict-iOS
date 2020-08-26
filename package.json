@@ -34,6 +34,7 @@
     "react-native-swiper": "^1.5.13",
     "react-native-vector-icons": "^4.6.0",
     "react-native-view-overflow": "0.0.3",
+    "react-native-webview": "^10.8.2",
     "react-navigation": "^2.18.3",
     "utf8": "^3.0.0"
   },
